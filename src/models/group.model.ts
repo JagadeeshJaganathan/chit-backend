@@ -2,19 +2,22 @@ import mongoose from "mongoose";
 
 const groupSchema = new mongoose.Schema(
   {
-    name: String,
-    totalAmount: Number,
-    duration: Number,
-    durationUnit: String,
-    memberLimit: Number,
-    startDate: Date,
-    totalMonths: {
+    name: {
+      type: String,
+      required: true,
+    },
+    amount: {
       type: Number,
       required: true,
-      default: 10,
+    },
+    members: {
+      type: Number,
+      required: true,
     },
   },
   { timestamps: true },
 );
 
-export default mongoose.model("Group", groupSchema);
+const Group = mongoose.model("Group", groupSchema);
+
+export default Group;
