@@ -14,16 +14,4 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ CREATE group (test)
-router.post("/", async (req, res) => {
-  try {
-    const group = new Group(req.body);
-    await group.save();
-    res.json(group);
-  } catch (err: any) {
-    console.log("CREATE ERROR:", err.message);
-    res.status(500).json({ error: err.message });
-  }
-});
-
 export default router;
