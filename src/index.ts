@@ -4,10 +4,10 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import groupRoutes from "./routes/group.routes";
-import memberRoutes from "./routes/member.routes"; // ✅ ADD
-import paymentRoutes from "./routes/payment.routes"; // ✅ ADD
-import winnerRoutes from "./routes/winner.routes"; // ✅ ADD
-import dashboardRoutes from "./routes/dashboard.routes"; // ✅ ADD
+import memberRoutes from "./routes/member.routes";
+import paymentRoutes from "./routes/payment.routes";
+import winnerRoutes from "./routes/winner.routes";
+import dashboardRoutes from "./routes/dashboard.routes";
 
 import Group from "./models/group.model";
 
@@ -18,56 +18,62 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Routes
+/* ================= ROUTES ================= */
 app.use("/groups", groupRoutes);
-app.use("/members", memberRoutes); // 🔥 FIX
-app.use("/payments", paymentRoutes); // 🔥 FIX
-app.use("/winners", winnerRoutes); // 🔥 FIX
-app.use("/dashboard", dashboardRoutes); // 🔥 FIX
+app.use("/members", memberRoutes);
+app.use("/payments", paymentRoutes);
+app.use("/winners", winnerRoutes);
+app.use("/dashboard", dashboardRoutes);
 
-// ✅ Test route
+/* ================= HEALTH CHECK ================= */
 app.get("/", (req, res) => {
   res.send("Chit Fund API Running 🚀");
 });
 
-// 🔥 AUTO CREATE GROUPS
+/* ================= SEED GROUPS ================= */
 const seedGroups = async () => {
   try {
-    // 🔥 DELETE OLD DATA (TEMP)
+    const count = await Group.countDocuments();
 
-    await Group.insertMany([
-      {
-        name: "Group A",
-        totalAmount: 300000,
-        duration: 10,
-        members: 10,
-        memberLimit: 20,
-      },
-      {
-        name: "Group B",
-        totalAmount: 300000,
-        duration: 10,
-        members: 10,
-        memberLimit: 25,
-      },
-    ]);
+    // ✅ Only run once (no duplicates)
+    if (count === 0) {
+      await Group.insertMany([
+        {
+          name: "Group A",
+          totalAmount: 300000,
+          duration: 10,
+          members: 10,
+          memberLimit: 20,
+        },
+        {
+          name: "Group B",
+          totalAmount: 300000,
+          duration: 10,
+          members: 10,
+          memberLimit: 25,
+        },
+      ]);
 
-    console.log("✅ Groups reset + created");
+      console.log("✅ Default groups created");
+    } else {
+      console.log("ℹ️ Groups already exist — skipping seed");
+    }
   } catch (err) {
-    console.log(err);
+    console.log("Seed error:", err);
   }
 };
 
-// ✅ MongoDB connection
+/* ================= DB CONNECT ================= */
 mongoose
   .connect(process.env.MONGO_URI as string)
   .then(async () => {
     console.log("DB Connected");
-    await seedGroups();
+
+    await seedGroups(); // 🔥 runs only once safely
   })
   .catch((err) => console.log(err));
 
-// ✅ PORT
+/* ================= SERVER ================= */
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
