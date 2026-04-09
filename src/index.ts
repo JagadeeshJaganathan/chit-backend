@@ -36,6 +36,7 @@ app.get("/", (req, res) => {
 const seedGroups = async () => {
   try {
     const count = await Group.countDocuments();
+    const defaultStartDate = new Date("2025-12-01T00:00:00.000Z");
 
     // ✅ Only run once (no duplicates)
     if (count === 0) {
@@ -46,6 +47,7 @@ const seedGroups = async () => {
           duration: 10,
           members: 10,
           memberLimit: 20,
+          startDate: defaultStartDate,
         },
         {
           name: "Group B",
@@ -53,6 +55,7 @@ const seedGroups = async () => {
           duration: 10,
           members: 10,
           memberLimit: 25,
+          startDate: defaultStartDate,
         },
       ]);
 

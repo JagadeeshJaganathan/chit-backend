@@ -7,10 +7,11 @@ export interface IGroup extends Document {
   duration: number;
   members: number;
   memberLimit: number;
-  startDate: Date; // 🔥 ADD THIS
+  startDate: Date;
 }
 
-// ✅ SCHEMA
+const getDefaultStartDate = () => new Date("2025-12-01T00:00:00.000Z");
+
 const groupSchema = new mongoose.Schema<IGroup>({
   name: String,
 
@@ -34,6 +35,7 @@ const groupSchema = new mongoose.Schema<IGroup>({
   startDate: {
     type: Date,
     required: true,
+    default: getDefaultStartDate,
   },
 });
 
