@@ -4,10 +4,11 @@ import Group from "../models/group.model";
 // ✅ CREATE GROUP
 export const createGroup = async (req: Request, res: Response) => {
   try {
-    const { name, totalAmount, memberLimit, totalMonths } = req.body;
+    const { name, totalAmount, memberLimit, duration, totalMonths } = req.body;
+    const groupDuration = duration ?? totalMonths;
 
     // 🔍 Validation (recommended)
-    if (!name || !totalAmount || !memberLimit || !totalMonths) {
+    if (!name || !totalAmount || !memberLimit || !groupDuration) {
       return res.status(400).json({
         message: "All fields required",
       });
@@ -17,7 +18,7 @@ export const createGroup = async (req: Request, res: Response) => {
       name,
       totalAmount,
       memberLimit,
-      totalMonths, // 🔥 important
+      duration: groupDuration,
     });
 
     res.json(group);
@@ -41,11 +42,12 @@ export const getGroups = async (req: Request, res: Response) => {
 export const updateGroupMonths = async (req: any, res: any) => {
   try {
     const { id } = req.params;
-    const { totalMonths } = req.body;
+    const { duration, totalMonths } = req.body;
+    const groupDuration = duration ?? totalMonths;
 
     const updated = await Group.findByIdAndUpdate(
       id,
-      { totalMonths },
+      { duration: groupDuration },
       { new: true },
     );
 

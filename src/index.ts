@@ -8,6 +8,7 @@ import memberRoutes from "./routes/member.routes";
 import paymentRoutes from "./routes/payment.routes";
 import winnerRoutes from "./routes/winner.routes";
 import dashboardRoutes from "./routes/dashboard.routes";
+import authRoutes from "./routes/auth.routes";
 
 import Group from "./models/group.model";
 
@@ -24,6 +25,7 @@ app.use("/members", memberRoutes);
 app.use("/payments", paymentRoutes);
 app.use("/winners", winnerRoutes);
 app.use("/dashboard", dashboardRoutes);
+app.use("/auth", authRoutes);
 
 /* ================= HEALTH CHECK ================= */
 app.get("/", (req, res) => {

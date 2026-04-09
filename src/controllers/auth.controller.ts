@@ -3,14 +3,22 @@ import jwt from "jsonwebtoken";
 
 export const login = async (req: Request, res: Response) => {
   try {
-    console.log("LOGIN BODY:", req.body);
     const { username, password } = req.body;
+    const adminUsername = process.env.ADMIN_USERNAME || "klmadmin";
+    const adminPassword = process.env.ADMIN_PASSWORD || "klmchitadmin";
+    const memberUsername = process.env.MEMBER_USERNAME || "klmchitmem";
+    const memberPassword = process.env.MEMBER_PASSWORD || "klmchit";
+    const jwtSecret = process.env.JWT_SECRET || "development-secret";
 
     // 👑 ADMIN
-    if (username === "klmadmin" && password === "klmchitadmin") {
-      const token = jwt.sign({ userId: "admin123", role: "admin" }, "secret", {
-        expiresIn: "1d",
-      });
+    if (username === adminUsername && password === adminPassword) {
+      const token = jwt.sign(
+        { userId: "admin123", role: "admin" },
+        jwtSecret,
+        {
+          expiresIn: "1d",
+        },
+      );
 
       return res.json({
         token,
@@ -23,10 +31,10 @@ export const login = async (req: Request, res: Response) => {
     }
 
     // 👤 MEMBER
-    if (username === "klmchitmem" && password === "klmchit") {
+    if (username === memberUsername && password === memberPassword) {
       const token = jwt.sign(
         { userId: "member123", role: "member" },
-        "secret",
+        jwtSecret,
         { expiresIn: "1d" },
       );
 
