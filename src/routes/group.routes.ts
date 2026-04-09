@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createGroup,
+  deleteGroup,
   endGroup,
   getGroups,
   updateGroupSettings,
@@ -12,5 +13,6 @@ router.post("/", createGroup);
 router.get("/", getGroups);
 router.patch("/:id", updateGroupSettings);
 router.post("/:id/end", endGroup);
+router.delete("/:id", deleteGroup);
 
 export default router;

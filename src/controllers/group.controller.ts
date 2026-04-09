@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import Group from "../models/group.model";
+import Member from "../models/member.model";
+import Payment from "../models/payment.model";
+import Winner from "../models/winner.model";
 
 // ✅ CREATE GROUP
 export const createGroup = async (req: Request, res: Response) => {
@@ -143,6 +146,34 @@ export const endGroup = async (req: Request, res: Response) => {
     res.json(updated);
   } catch (error) {
     console.log("END GROUP ERROR:", error);
+    res.status(500).json({ error });
+  }
+};
+
+export const deleteGroup = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const group = await Group.findById(id);
+
+    if (!group) {
+      return res.status(404).json({
+        message: "Group not found",
+      });
+    }
+
+    await Promise.all([
+      Member.deleteMany({ groupId: id }),
+      Payment.deleteMany({ groupId: id }),
+      Winner.deleteMany({ groupId: id }),
+      Group.findByIdAndDelete(id),
+    ]);
+
+    res.json({
+      message: "Group deleted successfully",
+    });
+  } catch (error) {
+    console.log("DELETE GROUP ERROR:", error);
     res.status(500).json({ error });
   }
 };
