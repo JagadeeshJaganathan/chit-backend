@@ -8,6 +8,8 @@ export interface IGroup extends Document {
   members: number;
   memberLimit: number;
   startDate: Date;
+  isEnded: boolean;
+  endedAt?: Date | null;
 }
 
 const getDefaultStartDate = () => new Date("2025-12-01T00:00:00.000Z");
@@ -36,6 +38,14 @@ const groupSchema = new mongoose.Schema<IGroup>({
     type: Date,
     required: true,
     default: getDefaultStartDate,
+  },
+  isEnded: {
+    type: Boolean,
+    default: false,
+  },
+  endedAt: {
+    type: Date,
+    default: null,
   },
 });
 
